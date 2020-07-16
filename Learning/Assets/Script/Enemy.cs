@@ -17,6 +17,14 @@ public class Enemy : MonoBehaviour
     public float a = 0;
     public Animator anim;
     bool chase;
+    float chaseTime = 0;
+    public AudioManager audim;
+    public float atkTime;
+
+    private void Awake()
+    {
+        audim = GameObject.FindGameObjectWithTag("audim").GetComponent<AudioManager>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +32,6 @@ public class Enemy : MonoBehaviour
         r2d = GetComponent<Rigidbody2D>();
         latestDirectionChangeTime = 0f;
         move();
-
     }
 
     // Update is called once per frame
@@ -35,7 +42,7 @@ public class Enemy : MonoBehaviour
             distance = Vector2.Distance(player.transform.position, gameObject.transform.position);
             Chase();
             chase = true;
-            if (distance > 6)
+            if (distance > 10)
             {
                 player = null;
                 chase = false;
@@ -53,7 +60,15 @@ public class Enemy : MonoBehaviour
             transform.position = new Vector2(Mathf.Clamp(gerak.x, xMin, xMax), Mathf.Clamp(gerak.y, yMin, yMax));
         }
     }
+    private void FixedUpdate()
+    {
+        SoundEnemy();
+    }
 
+    private void SoundEnemy()
+    {
+     
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Flashlight")
@@ -73,6 +88,15 @@ public class Enemy : MonoBehaviour
     }
     private void Chase()
     {
+        if (chaseTime==0)
+        {
+            audim.Play("Kejar");
+        }
+        chaseTime += Time.deltaTime;
+        if (chaseTime > 20)
+        {
+            chaseTime = 0;
+        }
         transform.position = Vector2.MoveTowards(transform.position,player.transform.position,speed*Time.deltaTime);
         Rotate();
         anim.SetBool("Chase", true);
@@ -83,6 +107,8 @@ public class Enemy : MonoBehaviour
         movementPerSecond = movementDirection * patrolSpeed;
         transform.up = -movementDirection;
         anim.SetBool("Chase", false);
+        chaseTime = 0;
+        audim.Stop("Kejar");
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -126,6 +152,13 @@ public class Enemy : MonoBehaviour
                     }
                 }
             }
+        }
+        if (collision.gameObject.tag == "Player")
+        {
+            anim.SetBool("Touch", true);
+            atkTime += Time.deltaTime;
+            if(atkTime>0.4f)
+            anim.SetBool("Touch", false);
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
