@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     public int runSpeed;
     public int walkSpeed;
     public CircleCollider2D cc2d;
+    public Animator anim;
 
     float horizontalInput;
     float verticalInput;
@@ -23,7 +24,8 @@ public class Movement : MonoBehaviour
     void Start()
     {
         r2d = GetComponent<Rigidbody2D>();
-        cc2d = gameObject.GetComponent<CircleCollider2D>(); 
+        cc2d = gameObject.GetComponent<CircleCollider2D>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -47,11 +49,15 @@ public class Movement : MonoBehaviour
         {
             r2d.velocity = new Vector2(horizontalInput * runSpeed, verticalInput * runSpeed);
             cc2d.radius = 1.5f;
+            anim.SetFloat("Speed", r2d.velocity.magnitude);
+            anim.SetBool("Run", true);
         }
         else 
         {
             r2d.velocity = new Vector2(horizontalInput * walkSpeed, verticalInput * walkSpeed);
             cc2d.radius = 1.1f;
+            anim.SetFloat("Speed", r2d.velocity.magnitude);
+            anim.SetBool("Run", false);
         }
     }
     private void rotatePlayer()
@@ -74,8 +80,7 @@ public class Movement : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall")
         {
-            Debug.Log("wall");
-             collision.Distance(cc2d);
+            //Debug.Log("wall");
         }
     }
 }
