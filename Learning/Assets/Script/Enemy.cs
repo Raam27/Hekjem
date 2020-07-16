@@ -89,14 +89,13 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.tag == "Wall" && chase==true)
         {
             Vector2[] spawnPos = new Vector2[4];
-            spawnPos[0] = new Vector2(player.transform.position.x, player.transform.position.y+2f);
-            spawnPos[1] = new Vector2(player.transform.position.x+2f, player.transform.position.y + 2f);
-            spawnPos[2] = new Vector2(player.transform.position.x-2f, player.transform.position.y );
-            spawnPos[3] = new Vector2(player.transform.position.x - 2f, player.transform.position.y - 2f);
+            spawnPos[3] = new Vector2(player.transform.position.x, player.transform.position.y+3f);
+            spawnPos[1] = new Vector2(player.transform.position.x+3f, player.transform.position.y + 3f);
+            spawnPos[2] = new Vector2(player.transform.position.x-3f, player.transform.position.y );
+            spawnPos[0] = new Vector2(player.transform.position.x - 3f, player.transform.position.y - 3f);
             bool kosong = false;
             a += Time.deltaTime;
-            Debug.Log(a);
-            if (a > 5)
+            if (a > 3)
             {
                 foreach(Vector2 spawn in spawnPos)
                 {
